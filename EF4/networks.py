@@ -69,7 +69,7 @@ class RegNet(tf.keras.layers.Layer):
         out = layers.LeakyReLU()(out)
         out = layers.Dense(16)(out)
         out = layers.LeakyReLU()(out)
-        out = layers.Dense(1, activation="relu", dtype='float32')(output)
+        out = layers.Dense(1, activation="relu", dtype='float32')(out)
         return out
 
 class ClassNet(tf.keras.layers.Layer):
@@ -86,7 +86,7 @@ class ClassNet(tf.keras.layers.Layer):
         out = layers.LeakyReLU()(out)
         out = layers.Dense(16)(out)
         out = layers.LeakyReLU()(out)
-        out = layers.Dense(5, activation="softmax", dtype='float32')(output)
+        out = layers.Dense(5, activation="softmax", dtype='float32')(out)
         return out
 
 class OutNet(tf.keras.layers.Layer):
