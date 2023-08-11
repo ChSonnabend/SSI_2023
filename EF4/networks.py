@@ -50,8 +50,8 @@ class PoolingByMultiHeadAttention(tf.keras.layers.Layer):
             layers.Dense(units=self.mlp_hidden_units, activation="relu"),
             layers.Dense(units=self.hidden_units)
         ])
-        self.layer_norm1 = layers.LayerNormalization(epsilon=1e-6)
-        self.layer_norm2 = layers.LayerNormalization(epsilon=1e-6)
+        self.layer_norm1 = layers.LayerNormalization(epsilon=1e-4)
+        self.layer_norm2 = layers.LayerNormalization(epsilon=1e-4)
         super(PoolingByMultiHeadAttention, self).build(input_shape)
 
     def call(self, inputs, training=None):
