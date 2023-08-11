@@ -1,4 +1,5 @@
 import tensorflow as tf
+import numpy as np
 from tensorflow import keras
 from tensorflow.keras import layers
 
@@ -38,8 +39,7 @@ class PoolingByMultiHeadAttention(tf.keras.layers.Layer):
     def build(self, input_shape):
       
         self.attention = tf.keras.layers.MultiHeadAttention(num_heads=self.num_heads, 
-                                                            key_dim=self.hidden_units)
-        
+                                                            key_dim=self.hidden_units) 
         self.seed_vectors = self.add_weight(
             shape=(1, self.num_seeds, self.hidden_units),
             initializer="random_normal",
@@ -61,7 +61,8 @@ class PoolingByMultiHeadAttention(tf.keras.layers.Layer):
         attention_output = self.layer_norm1(seeds + attention_output)
         feedforward_output = self.feedforward(attention_output)
         block_output = self.layer_norm2(attention_output + feedforward_output)
-        return block_output
+        flattened_block_output = layers.Reshape((self.hidden_units,))(block_output)
+        return flattened_block_output
 
 class TransformerNet(tf.keras.layers.Layer):
 
