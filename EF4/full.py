@@ -17,7 +17,7 @@ from networks import TransformerNet,RegNet,ClassNet,OutNet,PoolingByMultiHeadAtt
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-epochs         = 50
+epochs         = 20
 batch_size     = 256
 lambda_weight  = 0.75   # weight of classificator loss in training (regressin is 1-lambda
 model_name     = "model_full_"+str(lambda_weight)+".h5"
@@ -31,14 +31,13 @@ target_reg = np.array([])
 features_names = dict()
 
 dirs = [data_dir_train,data_dir_val]
-#dirs = [data_dir_train]
 
 for d in dirs:
     datafiles =  os.listdir(d)
-    #datafiles = ["jetImage_1_100p_60000_70000.h5","jetImage_1_100p_70000_80000.h5","jetImage_1_100p_80000_90000.h5","jetImage_1_100p_10000_20000.h5","jetImage_1_100p_20000_30000.h5","jetImage_1_100p_40000_50000.h5"]
     for i_f,fileIN in enumerate(datafiles):
-        print("Appending %s" %fileIN)
-        f = h5py.File(d + fileIN)
+        os.system("echo Appending %s " %fileIN)
+        #print("Appending %s" %fileIN)
+        f = h5py.File(d + fileIN,"r")
         jetList_file = np.array(f.get("jetConstituentList"))
         if len(jetList_file.shape) != 3: continue
         target_file = np.array(f.get('jets')[0:,-6:-1])
@@ -144,6 +143,8 @@ for i, label in enumerate(label_names):
         auc1[label] = auc(fpr[label], tpr[label])
 
         plt.plot(fpr[label],tpr[label],label='%s tagger, auc = %.1f%%'%(label,auc1[label]*100.))
+        if label=="top":
+            np.savetxt("plots/"+model_name[:-3]+"auc_data.txt",np.column_stack((fpr[label],tpr[label])))
 
 plt.ylabel("sig. efficiency")
 plt.xlabel("bkg. mistag rate")
@@ -154,10 +155,11 @@ plt.savefig("plots/"+model_name[:-3]+"_auc.png")
 plt.clf()
 
 predict_reg = model.predict(X_val)[0].flatten()
-plt.hist(((predict_reg-y_val_reg)/y_val_reg)*max_mass,50,(-200,200),density=True,histtype="step")
+n, bins,_ = plt.hist(((predict_reg-y_val_reg)/y_val_reg)*max_mass,50,(-200,200),density=True,histtype="step")
 plt.xlabel("Predicted  - True  / True ")
 plt.ylabel('Prob. Density (a.u.)', fontsize=15)
-plt.savefig("plots/"+model_name[:3]+"_reg.png")
+plt.savefig("plots/"+model_name[:-3]+"_reg.png")
+np.savetxt("plots/"+model_name[:-3]+"reg_histogram.txt", np.column_stack((bins[:-1], n)))
 plt.clf()
 
 confusion_mat = confusion_matrix(np.argmax(predict_val,axis=1),y_val_class)
