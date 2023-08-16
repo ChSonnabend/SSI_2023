@@ -155,7 +155,7 @@ plt.savefig("plots/"+model_name[:-3]+"_auc.png")
 plt.clf()
 
 predict_reg = model.predict(X_val)[0].flatten()
-n, bins,_ = plt.hist(((predict_reg-y_val_reg)/y_val_reg)*max_mass,50,(-200,200),density=True,histtype="step")
+n, bins,_ = plt.hist(((predict_reg-y_val_reg)/y_val_reg),50,(-200,200),density=True,histtype="step")
 plt.xlabel("Predicted  - True  / True ")
 plt.ylabel('Prob. Density (a.u.)', fontsize=15)
 plt.savefig("plots/"+model_name[:-3]+"_reg.png")
