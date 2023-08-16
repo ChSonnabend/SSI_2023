@@ -9,7 +9,7 @@ txt_pattern = 'txt'
 max_mass    =  250
 
 def read_file_data(file):
-    lambda_weight = float(file[11:15])    
+    lambda_weight = float(file[11:15])
     f = np.loadtxt(file) 
     return f, lambda_weight
 
@@ -17,11 +17,12 @@ files = sorted([file for file in os.listdir(directory) if file.endswith(txt_patt
 
 for file in files:
     f,l = read_file_data(file)
+    if len(str(l))==3: l = str(l)+"0"
     label = r"$\lambda_{class} = $ "+str(l) 
     plt.step(f[:,0]/max_mass,f[:,1],label=label)
 
 plt.grid(True)
-plt.xlabel("True - Predicted / True")
+plt.xlabel(r"$ \frac{m_{predicted}-m_{true}}{m_{predicted}}$",size=20)
 plt.ylabel("Prob. Density (a.u)")
 plt.ylim(0)
 plt.xlim(-0.75,0.75)
