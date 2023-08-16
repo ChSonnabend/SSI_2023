@@ -23,7 +23,7 @@ for file in files:
 
 plt.grid(True)
 plt.xlabel(r"$ \frac{m_{predicted}-m_{true}}{m_{predicted}}$",size=20)
-plt.ylabel("Prob. Density (a.u)")
+plt.ylabel("Prob. Density (A.U.)")
 plt.ylim(0)
 plt.xlim(-0.75,0.75)
 plt.legend(loc="best")
